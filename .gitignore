@@ -1,0 +1,33 @@
+# Environment secrets (never commit real credentials)
+.env
+.env.*
+!.env.example
+backend/.env
+frontend/.env
+
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build output and test coverage
+dist/
+**/dist/
+coverage/
+**/coverage/
+
+# Logs and temporary files
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+*.tmp
+*.temp
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local generated exports/data (keep source fixtures and scripts)
+backend/data/
