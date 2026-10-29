@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* "Mission Control" design tokens: dark NOC theme by default, light theme via .light */
+:root {
+  --bg: 8 13 24; --panel: 15 23 42; --panel2: 22 32 54; --line: 38 52 82;
+  --ink: 226 232 240; --mute: 133 148 175; --brand: 34 211 238;
+  --ok: 52 211 153; --info: 96 165 250; --warn: 251 191 36; --danger: 248 113 113; --crit: 244 63 94;
+  color-scheme: dark;
+}
+.light {
+  --bg: 241 245 249; --panel: 255 255 255; --panel2: 241 245 249; --line: 214 222 235;
+  --ink: 15 23 42; --mute: 100 116 139; --brand: 8 145 178;
+  --ok: 5 150 105; --info: 37 99 235; --warn: 202 138 4; --danger: 220 38 38; --crit: 225 29 72;
+  color-scheme: light;
+}
+
+html, body, #root { height: 100%; }
+body {
+  @apply bg-bg text-ink font-sans antialiased;
+  background-image: radial-gradient(rgb(var(--line) / .35) 1px, transparent 1px);
+  background-size: 22px 22px;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@layer components {
+  .card { @apply rounded-xl border border-line bg-panel/90 backdrop-blur; }
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition
+          focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/70 disabled:opacity-50 disabled:cursor-not-allowed; }
+  .btn-primary { @apply btn bg-brand text-bg hover:brightness-110 active:scale-[.98]; }
+  .btn-ghost { @apply btn border border-line text-ink hover:bg-panel2 active:scale-[.98]; }
+  .btn-danger { @apply btn bg-danger/15 text-danger border border-danger/40 hover:bg-danger/25; }
+  .input { @apply w-full rounded-lg border border-line bg-panel2 px-3 py-2 text-sm text-ink placeholder:text-mute/70
+          focus:outline-none focus:ring-2 focus:ring-brand/60 aria-[invalid=true]:border-danger; }
+  .label { @apply mb-1 block text-xs font-medium text-mute; }
+  .chip { @apply inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-medium; }
+  .mono { @apply font-mono tabular-nums; }
+}
+
+/* striped overrun segment (colour is NOT the only signal: pattern + label) */
+.hatch { background-image: repeating-linear-gradient(45deg, rgb(255 255 255 / .25) 0 4px, transparent 4px 8px); }
+.skeleton { @apply relative overflow-hidden rounded bg-panel2; }
+.skeleton::after { content: ''; @apply absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/10 to-transparent; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+
+@media print {
+  aside, header, nav, .no-print, [aria-live] { display: none !important; }
+  body { background: #fff !important; color: #000 !important; background-image: none !important; }
+  .card { border-color: #ccc !important; background: #fff !important; backdrop-filter: none !important; }
+  main { padding: 0 !important; }
+}

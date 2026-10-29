@@ -1,0 +1,353 @@
+// Ticko database schema. See docs/02-system-design.md section 6.
+// NOTE: CHECK constraints, partial indexes, trigram indexes and the ticket
+// number sequence start live in the hand-written SQL part of the migration
+// (Prisma cannot express them).
+
+generator client {
+  provider = "prisma-client-js"
+  engineType = "client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ───────────────────────── Enums ─────────────────────────
+
+enum Role {
+  OPERATOR
+  SUPERVISOR
+  TECHNICIAN
+  ADMIN
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum TicketStatus {
+  OPEN
+  DIAGNOSING
+  AWAITING_ASSIGNMENT
+  ASSIGNED
+  IN_PROGRESS
+  VERIFYING
+  RESOLVED
+  CLOSED
+  REOPENED
+  CANCELLED
+}
+
+enum Diagnosis {
+  LINE_FAULT
+  ROUTER_CONFIG
+  CONGESTION
+  PROVISIONING
+  UNKNOWN
+}
+
+enum Skill {
+  NETWORK
+  ROUTER
+  FIBER
+  WIFI
+  GENERAL
+}
+
+enum Availability {
+  AVAILABLE
+  BUSY
+  OFF_DUTY
+}
+
+enum SlaState {
+  ON_TRACK
+  AT_RISK
+  WARNING
+  BREACHED
+}
+
+enum StepStatus {
+  LOCKED
+  READY
+  IN_PROGRESS
+  DONE
+  SKIPPED
+}
+
+enum AssignmentRole {
+  PRIMARY
+  HELPER
+}
+
+enum JobType {
+  DIAGNOSE_LINE
+  VERIFY_SPEED
+  EXPORT_REPORT
+}
+
+enum JobStatus {
+  QUEUED
+  RUNNING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+}
+
+enum HistoryEntity {
+  TICKET
+  STEP
+  ASSIGNMENT
+  JOB
+  SYSTEM
+}
+
+// ───────────────────────── Models ─────────────────────────
+
+model User {
+  id           String   @id @default(uuid()) @db.Uuid
+  name         String
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         Role
+  active       Boolean  @default(true)
+  tokenVersion Int      @default(1) @map("token_version")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  technician      Technician?
+  createdTickets  Ticket[]           @relation("TicketCreator")
+  assignmentsMade TicketAssignment[] @relation("AssignedBy")
+  history         StatusHistory[]
+  requestedJobs   Job[]
+
+  @@map("users")
+}
+
+model Technician {
+  id            String       @id @default(uuid()) @db.Uuid
+  userId        String       @unique @map("user_id") @db.Uuid
+  skills        Skill[]
+  availability  Availability @default(AVAILABLE)
+  activeTickets Int          @default(0) @map("active_tickets")
+  maxActive     Int          @default(2) @map("max_active")
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
+
+  user        User               @relation(fields: [userId], references: [id], onDelete: Restrict)
+  tickets     Ticket[]
+  assignments TicketAssignment[]
+  steps       WorkStep[]
+
+  @@map("technicians")
+}
+
+model Customer {
+  id        String   @id @default(uuid()) @db.Uuid
+  accountNo String   @unique @map("account_no")
+  name      String
+  phone     String
+  address   String
+  area      String?
+  planMbps  Int      @map("plan_mbps")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  tickets Ticket[]
+
+  @@index([phone])
+  @@map("customers")
+}
+
+model Ticket {
+  id                String       @id @default(uuid()) @db.Uuid
+  number            Int          @unique @default(autoincrement()) // displayed as TX-<number>
+  customerId        String       @map("customer_id") @db.Uuid
+  createdById       String       @map("created_by") @db.Uuid
+  technicianId      String?      @map("technician_id") @db.Uuid
+  title             String
+  description       String
+  category          String
+  priority          Priority
+  escalated         Boolean      @default(false)
+  status            TicketStatus @default(OPEN)
+  progress          Int          @default(0)
+  diagnosis         Diagnosis?
+  slaState          SlaState     @default(ON_TRACK) @map("sla_state")
+  slaStartedAt      DateTime     @default(now()) @map("sla_started_at")
+  slaDeadline       DateTime     @map("sla_deadline")
+  forecastFinish    DateTime?    @map("forecast_finish")
+  estimatedTotalMin Int          @default(0) @map("estimated_total_min")
+  actualTotalMin    Int          @default(0) @map("actual_total_min")
+  reopenCount       Int          @default(0) @map("reopen_count")
+  trackToken        String       @unique @map("track_token")
+  cancelReason      String?      @map("cancel_reason")
+  version           Int          @default(1)
+  createdAt         DateTime     @default(now()) @map("created_at")
+  updatedAt         DateTime     @updatedAt @map("updated_at")
+  resolvedAt        DateTime?    @map("resolved_at")
+  closedAt          DateTime?    @map("closed_at")
+
+  categoryRef Category           @relation(fields: [category], references: [code], onDelete: Restrict, onUpdate: Cascade)
+  customer    Customer           @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  createdBy   User               @relation("TicketCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  technician  Technician?        @relation(fields: [technicianId], references: [id], onDelete: Restrict)
+  assignments TicketAssignment[]
+  steps       WorkStep[]
+  history     StatusHistory[]
+  jobs        Job[]
+
+  @@index([status])
+  @@index([priority, createdAt])
+  @@index([technicianId])
+  @@index([customerId])
+  @@index([slaState])
+  @@index([category])
+  @@map("tickets")
+}
+
+model TicketAssignment {
+  id           String         @id @default(uuid()) @db.Uuid
+  ticketId     String         @map("ticket_id") @db.Uuid
+  technicianId String         @map("technician_id") @db.Uuid
+  role         AssignmentRole @default(PRIMARY)
+  assignedById String         @map("assigned_by") @db.Uuid
+  note         String?
+  assignedAt   DateTime       @default(now()) @map("assigned_at")
+  releasedAt   DateTime?      @map("released_at")
+
+  ticket     Ticket     @relation(fields: [ticketId], references: [id], onDelete: Restrict)
+  technician Technician @relation(fields: [technicianId], references: [id], onDelete: Restrict)
+  assignedBy User       @relation("AssignedBy", fields: [assignedById], references: [id], onDelete: Restrict)
+
+  @@index([ticketId])
+  @@index([technicianId])
+  @@map("ticket_assignments")
+}
+
+model WorkStep {
+  id               String     @id @default(uuid()) @db.Uuid
+  ticketId         String     @map("ticket_id") @db.Uuid
+  seq              Int
+  title            String
+  description      String?
+  requiredSkill    Skill?     @map("required_skill")
+  status           StepStatus @default(READY)
+  estimatedMinutes Int        @map("estimated_minutes")
+  actualMinutes    Int?       @map("actual_minutes")
+  assigneeId       String?    @map("assignee_id") @db.Uuid
+  startedAt        DateTime?  @map("started_at")
+  completedAt      DateTime?  @map("completed_at")
+  lastOverrunLevel Int        @default(0) @map("last_overrun_level") // 0 none, 1 = 1.0x, 2 = 1.5x, 3 = 2.0x
+  version          Int        @default(1)
+  createdAt        DateTime   @default(now()) @map("created_at")
+  updatedAt        DateTime   @updatedAt @map("updated_at")
+
+  ticket       Ticket           @relation(fields: [ticketId], references: [id], onDelete: Restrict)
+  assignee     Technician?      @relation(fields: [assigneeId], references: [id], onDelete: Restrict)
+  dependencies StepDependency[] @relation("StepDeps")
+  dependants   StepDependency[] @relation("DependsOn")
+
+  @@unique([ticketId, seq])
+  @@index([status])
+  @@index([assigneeId])
+  @@map("work_steps")
+}
+
+model StepDependency {
+  stepId      String @map("step_id") @db.Uuid
+  dependsOnId String @map("depends_on_id") @db.Uuid
+
+  step      WorkStep @relation("StepDeps", fields: [stepId], references: [id], onDelete: Cascade)
+  dependsOn WorkStep @relation("DependsOn", fields: [dependsOnId], references: [id], onDelete: Cascade)
+
+  @@id([stepId, dependsOnId])
+  @@index([dependsOnId])
+  @@map("step_dependencies")
+}
+
+model StatusHistory {
+  id        String        @id @default(uuid()) @db.Uuid
+  ticketId  String        @map("ticket_id") @db.Uuid
+  entity    HistoryEntity
+  entityId  String?       @map("entity_id") @db.Uuid
+  fromValue String?       @map("from_value")
+  toValue   String        @map("to_value")
+  message   String?
+  actorId   String?       @map("actor_id") @db.Uuid // null = system
+  createdAt DateTime      @default(now()) @map("created_at")
+
+  ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Restrict)
+  actor  User?  @relation(fields: [actorId], references: [id], onDelete: Restrict)
+
+  @@index([ticketId, createdAt])
+  @@map("status_history")
+}
+
+model Job {
+  id            String    @id @default(uuid()) @db.Uuid
+  ticketId      String?   @map("ticket_id") @db.Uuid
+  type          JobType
+  status        JobStatus @default(QUEUED)
+  priorityRank  Int       @default(2) @map("priority_rank") // 0 critical ... 3 low
+  progress      Int       @default(0)
+  stage         String?
+  attempts      Int       @default(0)
+  maxAttempts   Int       @default(3) @map("max_attempts")
+  payload       Json?
+  result        Json?
+  error         String?
+  requestedById String?   @map("requested_by") @db.Uuid
+  createdAt     DateTime  @default(now()) @map("created_at")
+  startedAt     DateTime? @map("started_at")
+  finishedAt    DateTime? @map("finished_at")
+
+  ticket       Ticket?       @relation(fields: [ticketId], references: [id], onDelete: Restrict)
+  requestedBy  User?         @relation(fields: [requestedById], references: [id], onDelete: Restrict)
+  probeResults ProbeResult[]
+
+  @@index([status, priorityRank, createdAt])
+  @@index([ticketId])
+  @@map("jobs")
+}
+
+model ProbeResult {
+  id        String   @id @default(uuid()) @db.Uuid
+  jobId     String   @map("job_id") @db.Uuid
+  checkName String   @map("check_name")
+  passed    Boolean
+  metrics   Json
+  createdAt DateTime @default(now()) @map("created_at")
+
+  job Job @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@index([jobId])
+  @@map("probe_results")
+}
+
+model SlaPolicy {
+  priority          Priority @id
+  resolutionMinutes Int      @map("resolution_minutes")
+  warningPct        Int      @default(75) @map("warning_pct")
+
+  @@map("sla_policies")
+}
+
+model Category {
+  code            String    @id
+  name            String    @unique
+  description     String?
+  planTemplate    Diagnosis @default(UNKNOWN) @map("plan_template")
+  defaultPriority Priority  @default(MEDIUM) @map("default_priority")
+  active          Boolean   @default(true)
+  builtin         Boolean   @default(false)
+  sortOrder       Int       @default(0) @map("sort_order")
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  tickets Ticket[]
+
+  @@map("categories")
+}

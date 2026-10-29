@@ -1,0 +1,834 @@
+{
+ "metrics.updated": {
+  "seq": 2,
+  "type": "metrics.updated",
+  "ts": "2026-10-28T21:52:14.095Z",
+  "room": "staff",
+  "payload": {
+   "metrics": {
+    "tickets": {
+     "open": 0,
+     "createdLast24h": 0,
+     "resolvedLast24h": 0,
+     "byStatus": {},
+     "unassigned": 0
+    },
+    "sla": {
+     "onTrack": 0,
+     "atRisk": 0,
+     "warning": 0,
+     "breached": 0
+    },
+    "queue": {
+     "queued": 0,
+     "running": 0,
+     "concurrency": 3,
+     "utilisation": 0,
+     "jobsPerMin": 0,
+     "succeeded": 0,
+     "failed": 0,
+     "cancelled": 0,
+     "retried": 0
+    },
+    "technicians": {
+     "count": 4,
+     "activeTickets": 0,
+     "capacity": 8,
+     "utilisationPct": 0
+    },
+    "realtime": {
+     "clients": 1
+    },
+    "config": {
+     "timeScale": 400,
+     "demoMode": true,
+     "maxActiveTickets": 2
+    },
+    "ts": "2026-10-28T21:52:14.095Z"
+   }
+  }
+ },
+ "presence.updated": {
+  "seq": 3,
+  "type": "presence.updated",
+  "ts": "2026-10-28T21:52:14.443Z",
+  "room": "staff",
+  "payload": {
+   "online": [
+    {
+     "id": "068e2bed-4c1b-45b0-b99c-387f5be19a30",
+     "name": "Supervisor Sabbir",
+     "role": "SUPERVISOR"
+    }
+   ]
+  }
+ },
+ "job.queued": {
+  "seq": 4,
+  "type": "job.queued",
+  "ts": "2026-10-28T21:52:15.824Z",
+  "room": "staff",
+  "payload": {
+   "job": {
+    "id": "8370c53a-36ec-40d6-bc7e-b99966d1eae0",
+    "type": "DIAGNOSE_LINE",
+    "ticketId": "fc0f3a7b-edaf-48c2-aeb4-75876d499668",
+    "status": "QUEUED",
+    "priorityRank": 1
+   }
+  }
+ },
+ "ticket.created": {
+  "seq": 5,
+  "type": "ticket.created",
+  "ts": "2026-10-28T21:52:15.845Z",
+  "room": "staff",
+  "payload": {
+   "ticket": {
+    "id": "fc0f3a7b-edaf-48c2-aeb4-75876d499668",
+    "number": 1001,
+    "ticketNo": "TX-1001",
+    "title": "Internet very slow in the evening",
+    "description": "Speed drops to a fraction of the plan after 8 PM every day",
+    "category": "SLOW_SPEED",
+    "categoryName": "Slow speed",
+    "priority": "HIGH",
+    "escalated": false,
+    "status": "OPEN",
+    "progress": 0,
+    "diagnosis": null,
+    "slaState": "ON_TRACK",
+    "slaStartedAt": "2026-10-28T21:52:15.788Z",
+    "slaDeadline": "2026-10-28T21:53:27.788Z",
+    "forecastFinish": null,
+    "estimatedTotalMin": 0,
+    "actualTotalMin": 0,
+    "reopenCount": 0,
+    "cancelReason": null,
+    "version": 1,
+    "createdAt": "2026-10-28T21:52:15.788Z",
+    "updatedAt": "2026-10-28T21:52:15.791Z",
+    "resolvedAt": null,
+    "closedAt": null,
+    "customer": {
+     "id": "bf2752c3-48f2-455e-b876-4d665b06061b",
+     "accountNo": "ACC-1010",
+     "name": "Dilruba Yasmin",
+     "phone": "+8801711000010",
+     "address": "Khilgaon Chowdhurypara",
+     "area": "Khilgaon",
+     "planMbps": 50
+    },
+    "technician": null
+   }
+  }
+ },
+ "job.started": {
+  "seq": 6,
+  "type": "job.started",
+  "ts": "2026-10-28T21:52:15.849Z",
+  "room": "staff",
+  "payload": {
+   "job": {
+    "id": "8370c53a-36ec-40d6-bc7e-b99966d1eae0",
+    "ticketId": "fc0f3a7b-edaf-48c2-aeb4-75876d499668",
+    "type": "DIAGNOSE_LINE",
+    "status": "RUNNING",
+    "priorityRank": 1,
+    "progress": 0,
+    "stage": null,
+    "attempts": 1,
+    "maxAttempts": 3,
+    "error": null,
+    "createdAt": "2026-10-28T21:52:15.788Z",
+    "startedAt": "2026-10-28T21:52:15.824Z",
+    "finishedAt": null
+   }
+  }
+ },
+ "ticket.status_changed": {
+  "seq": 7,
+  "type": "ticket.status_changed",
+  "ts": "2026-10-28T21:52:16.003Z",
+  "room": "staff",
+  "payload": {
+   "ticket": {
+    "id": "fc0f3a7b-edaf-48c2-aeb4-75876d499668",
+    "number": 1001,
+    "ticketNo": "TX-1001",
+    "title": "Internet very slow in the evening",
+    "description": "Speed drops to a fraction of the plan after 8 PM every day",
+    "category": "SLOW_SPEED",
+    "categoryName": "Slow speed",
+    "priority": "HIGH",
+    "escalated": false,
+    "status": "DIAGNOSING",
+    "progress": 0,
+    "diagnosis": null,
+    "slaState": "ON_TRACK",
+    "slaStartedAt": "2026-10-28T21:52:15.788Z",
+    "slaDeadline": "2026-10-28T21:53:27.788Z",
+    "forecastFinish": null,
+    "estimatedTotalMin": 0,
+    "actualTotalMin": 0,
+    "reopenCount": 0,
+    "cancelReason": null,
+    "version": 2,
+    "createdAt": "2026-10-28T21:52:15.788Z",
+    "updatedAt": "2026-10-28T21:52:15.873Z",
+    "resolvedAt": null,
+    "closedAt": null,
+    "customer": {
+     "id": "bf2752c3-48f2-455e-b876-4d665b06061b",
+     "accountNo": "ACC-1010",
+     "name": "Dilruba Yasmin",
+     "phone": "+8801711000010",
+     "address": "Khilgaon Chowdhurypara",
+     "area": "Khilgaon",
+     "planMbps": 50
+    },
+    "technician": null
+   },
+   "from": "OPEN",
+   "to": "DIAGNOSING"
+  }
+ },
+ "job.progress": {
+  "seq": 9,
+  "type": "job.progress",
+  "ts": "2026-10-28T21:52:16.042Z",
+  "room": "staff",
+  "payload": {
+   "jobId": "8370c53a-36ec-40d6-bc7e-b99966d1eae0",
+   "ticketId": "fc0f3a7b-edaf-48c2-aeb4-75876d499668",
+   "type": "DIAGNOSE_LINE",
+   "progress": 2,
+   "stage": "Starting diagnostics",
+   "ticketProgress": 0
+  }
+ },
+ "step.updated": {
+  "seq": 16,
+  "type": "step.updated",
+  "ts": "2026-10-28T21:52:16.805Z",
+  "room": "staff",
+  "payload": {
+   "ticketId": "fc0f3a7b-edaf-48c2-aeb4-75876d499668",
+   "steps": [
+    {
+     "id": "8f2630cc-b151-4473-ae04-897f22678b7d",
+     "ticketId": "fc0f3a7b-edaf-48c2-aeb4-75876d499668",
+     "seq": 1,
+     "title": "Check router & connection",
+     "status": "READY",
+     "estimatedMinutes": 20,
+     "actualMinutes": null,
+     "requiredSkill": "ROUTER",
+     "assigneeId": null,
+     "assigneeName": null,
+     "startedAt": null,
+     "completedAt": null,
+     "dependsOn": [],
+     "version": 1,
+     "elapsedMinutes": 0,
+     "etaMinutes": 20,
+     "overrunLevel": 0,
+     "overrun": false
+    },
+    {
+     "id": "d8c4089e-0073-424a-8e74-4a935fe066b6",
+     "ticketId": "fc0f3a7b-edaf-48c2-aeb4-75876d499668",
+     "seq": 2,
+     "title": "Check Wi-Fi interference",
+     "status": "READY",
+     "estimatedMinutes": 15,
+     "actualMinutes": null,
+     "requiredSkill": "WIFI",
+     "assigneeId": null,
+     "assigneeName": null,
+     "startedAt": null,
+     "completedAt": null,
+     "dependsOn": [],
+     "version": 1,
+     "elapsedMinutes": 0,
+     "etaMinutes": 15,
+     "overrunLevel": 0,
+     "overrun": false
+    },
+    {
+     "id": "6125ff54-3954-4d15-882a-19480a1ea292",
+     "ticketId": "fc0f3a7b-edaf-48c2-aeb4-75876d499668",
+     "seq": 3,
+     "title": "Apply configuration fix",
+     "status": "LOCKED",
+     "estimatedMinutes": 15,
+     "actualMinutes": null,
+     "requiredSkill": "ROUTER",
+     "assigneeId": null,
+     "assigneeName": null,
+     "startedAt": null,
+     "completedAt": null,
+     "dependsOn": [
+      "8f2630cc-b151-4473-ae04-897f22678b7d",
+      "d8c4089e-0073-424a-8e74-4a935fe066b6"
+     ],
+     "version": 1,
+     "elapsedMinutes": 0,
+     "etaMinutes": 35,
+     "overrunLevel": 0,
+     "overrun": false
+    },
+    {
+     "id": "84f1a7b0-cbaf-4d80-94f4-d9ef7db90bf8",
+     "ticketId": "fc0f3a7b-edaf-48c2-aeb4-75876d499668",
+     "seq": 4,
+     "title": "Run speed test",
+     "status": "LOCKED",
+     "estimatedMinutes": 5,
+     "actualMinutes": null,
+     "requiredSkill": "GENERAL",
+     "assigneeId": null,
+     "assigneeName": null,
+     "startedAt": null,
+     "completedAt": null,
+     "dependsOn": [
+      "6125ff54-3954-4d15-882a-19480a1ea292"
+     ],
+     "version": 1,
+     "elapsedMinutes": 0,
+     "etaMinutes": 40,
+     "overrunLevel": 0,
+     "overrun": false
+    },
+    {
+     "id": "d48c638b-d958-462c-863d-7552a9ec4fb9",
+     "ticketId": "fc0f3a7b-edaf-48c2-aeb4-75876d499668",
+     "seq": 5,
+     "title": "Verify result & update customer",
+     "status": "LOCKED",
+     "estimatedMinutes": 5,
+     "actualMinutes": null,
+     "requiredSkill": "GENERAL",
+     "assigneeId": null,
+     "assigneeName": null,
+     "startedAt": null,
+     "completedAt": null,
+     "dependsOn": [
+      "84f1a7b0-cbaf-4d80-94f4-d9ef7db90bf8"
+     ],
+     "version": 1,
+     "elapsedMinutes": 0,
+     "etaMinutes": 45,
+     "overrunLevel": 0,
+     "overrun": false
+    }
+   ],
+   "forecast": {
+    "finish": "2026-10-28T21:52:23.552Z",
+    "estimatedTotalMin": 60,
+    "actualTotalMin": 0
+   },
+   "changedStepId": null
+  }
+ },
+ "job.completed": {
+  "seq": 19,
+  "type": "job.completed",
+  "ts": "2026-10-28T21:52:16.821Z",
+  "room": "staff",
+  "payload": {
+   "job": {
+    "id": "8370c53a-36ec-40d6-bc7e-b99966d1eae0",
+    "ticketId": "fc0f3a7b-edaf-48c2-aeb4-75876d499668",
+    "type": "DIAGNOSE_LINE",
+    "status": "SUCCEEDED",
+    "priorityRank": 1,
+    "progress": 100,
+    "stage": "Diagnosis complete",
+    "attempts": 1,
+    "maxAttempts": 3,
+    "error": null,
+    "createdAt": "2026-10-28T21:52:15.788Z",
+    "startedAt": "2026-10-28T21:52:15.824Z",
+    "finishedAt": "2026-10-28T21:52:16.818Z"
+   }
+  }
+ },
+ "ticket.assigned": {
+  "seq": 21,
+  "type": "ticket.assigned",
+  "ts": "2026-10-28T21:52:17.135Z",
+  "room": "staff",
+  "payload": {
+   "ticket": {
+    "id": "fc0f3a7b-edaf-48c2-aeb4-75876d499668",
+    "number": 1001,
+    "ticketNo": "TX-1001",
+    "title": "Internet very slow in the evening",
+    "description": "Speed drops to a fraction of the plan after 8 PM every day",
+    "category": "SLOW_SPEED",
+    "categoryName": "Slow speed",
+    "priority": "HIGH",
+    "escalated": false,
+    "status": "ASSIGNED",
+    "progress": 20,
+    "diagnosis": "ROUTER_CONFIG",
+    "slaState": "ON_TRACK",
+    "slaStartedAt": "2026-10-28T21:52:15.788Z",
+    "slaDeadline": "2026-10-28T21:53:27.788Z",
+    "forecastFinish": "2026-10-28T21:52:23.877Z",
+    "estimatedTotalMin": 60,
+    "actualTotalMin": 0,
+    "reopenCount": 0,
+    "cancelReason": null,
+    "version": 4,
+    "createdAt": "2026-10-28T21:52:15.788Z",
+    "updatedAt": "2026-10-28T21:52:17.128Z",
+    "resolvedAt": null,
+    "closedAt": null,
+    "customer": {
+     "id": "bf2752c3-48f2-455e-b876-4d665b06061b",
+     "accountNo": "ACC-1010",
+     "name": "Dilruba Yasmin",
+     "phone": "+8801711000010",
+     "address": "Khilgaon Chowdhurypara",
+     "area": "Khilgaon",
+     "planMbps": 50
+    },
+    "technician": {
+     "id": "0e865d39-1c8c-442c-bfc2-7cf086ac5f88",
+     "name": "Nusrat Jahan",
+     "skills": [
+      "ROUTER",
+      "WIFI"
+     ]
+    }
+   },
+   "technicianId": "0e865d39-1c8c-442c-bfc2-7cf086ac5f88",
+   "reassigned": false
+  }
+ },
+ "technician.updated": {
+  "seq": 23,
+  "type": "technician.updated",
+  "ts": "2026-10-28T21:52:17.149Z",
+  "room": "staff",
+  "payload": {
+   "technician": {
+    "id": "0e865d39-1c8c-442c-bfc2-7cf086ac5f88",
+    "userId": "a441cbe6-fe5a-4bb8-88ed-5a05271d5b4a",
+    "name": "Nusrat Jahan",
+    "email": "nusrat@tixory.test",
+    "skills": [
+     "ROUTER",
+     "WIFI"
+    ],
+    "availability": "AVAILABLE",
+    "activeTickets": 1,
+    "maxActive": 2,
+    "atCapacity": false
+   }
+  }
+ },
+ "forecast.updated": {
+  "seq": 27,
+  "type": "forecast.updated",
+  "ts": "2026-10-28T21:52:17.413Z",
+  "room": "staff",
+  "payload": {
+   "ticket": {
+    "id": "fc0f3a7b-edaf-48c2-aeb4-75876d499668",
+    "number": 1001,
+    "ticketNo": "TX-1001",
+    "title": "Internet very slow in the evening",
+    "description": "Speed drops to a fraction of the plan after 8 PM every day",
+    "category": "SLOW_SPEED",
+    "categoryName": "Slow speed",
+    "priority": "HIGH",
+    "escalated": false,
+    "status": "IN_PROGRESS",
+    "progress": 20,
+    "diagnosis": "ROUTER_CONFIG",
+    "slaState": "ON_TRACK",
+    "slaStartedAt": "2026-10-28T21:52:15.788Z",
+    "slaDeadline": "2026-10-28T21:53:27.788Z",
+    "forecastFinish": "2026-10-28T21:52:23.964Z",
+    "estimatedTotalMin": 60,
+    "actualTotalMin": 1,
+    "reopenCount": 0,
+    "cancelReason": null,
+    "version": 5,
+    "createdAt": "2026-10-28T21:52:15.788Z",
+    "updatedAt": "2026-10-28T21:52:17.408Z",
+    "resolvedAt": null,
+    "closedAt": null,
+    "customer": {
+     "id": "bf2752c3-48f2-455e-b876-4d665b06061b",
+     "accountNo": "ACC-1010",
+     "name": "Dilruba Yasmin",
+     "phone": "+8801711000010",
+     "address": "Khilgaon Chowdhurypara",
+     "area": "Khilgaon",
+     "planMbps": 50
+    },
+    "technician": {
+     "id": "0e865d39-1c8c-442c-bfc2-7cf086ac5f88",
+     "name": "Nusrat Jahan",
+     "skills": [
+      "ROUTER",
+      "WIFI"
+     ]
+    }
+   },
+   "forecast": {
+    "finish": "2026-10-28T21:52:23.964Z",
+    "estimatedTotalMin": 60,
+    "actualTotalMin": 1,
+    "steps": {
+     "d8c4089e-0073-424a-8e74-4a935fe066b6": {
+      "etaMinutes": 15,
+      "elapsedMinutes": 0,
+      "overrunLevel": 0,
+      "overrun": false
+     },
+     "6125ff54-3954-4d15-882a-19480a1ea292": {
+      "etaMinutes": 33.7,
+      "elapsedMinutes": 0,
+      "overrunLevel": 0,
+      "overrun": false
+     },
+     "84f1a7b0-cbaf-4d80-94f4-d9ef7db90bf8": {
+      "etaMinutes": 38.7,
+      "elapsedMinutes": 0,
+      "overrunLevel": 0,
+      "overrun": false
+     },
+     "d48c638b-d958-462c-863d-7552a9ec4fb9": {
+      "etaMinutes": 43.7,
+      "elapsedMinutes": 0,
+      "overrunLevel": 0,
+      "overrun": false
+     },
+     "8f2630cc-b151-4473-ae04-897f22678b7d": {
+      "etaMinutes": 18.7,
+      "elapsedMinutes": 1.3,
+      "overrunLevel": 0,
+      "overrun": false
+     }
+    }
+   }
+  }
+ },
+ "step.overrun": {
+  "seq": 64,
+  "type": "step.overrun",
+  "ts": "2026-10-28T21:52:20.409Z",
+  "room": "staff",
+  "payload": {
+   "ticketId": "fc0f3a7b-edaf-48c2-aeb4-75876d499668",
+   "ticketNo": "TX-1001",
+   "stepId": "8f2630cc-b151-4473-ae04-897f22678b7d",
+   "title": "Check router & connection",
+   "level": 1,
+   "multiple": 1,
+   "estimatedMinutes": 20,
+   "elapsedMinutes": 21,
+   "suggestion": null
+  }
+ },
+ "ticket.updated": {
+  "seq": 77,
+  "type": "ticket.updated",
+  "ts": "2026-10-28T21:52:20.886Z",
+  "room": "staff",
+  "payload": {
+   "ticket": {
+    "id": "fc0f3a7b-edaf-48c2-aeb4-75876d499668",
+    "number": 1001,
+    "ticketNo": "TX-1001",
+    "title": "Internet very slow in the evening",
+    "description": "Speed drops to a fraction of the plan after 8 PM every day",
+    "category": "SLOW_SPEED",
+    "categoryName": "Slow speed",
+    "priority": "HIGH",
+    "escalated": false,
+    "status": "IN_PROGRESS",
+    "progress": 32,
+    "diagnosis": "ROUTER_CONFIG",
+    "slaState": "ON_TRACK",
+    "slaStartedAt": "2026-10-28T21:52:15.788Z",
+    "slaDeadline": "2026-10-28T21:53:27.788Z",
+    "forecastFinish": "2026-10-28T21:52:26.875Z",
+    "estimatedTotalMin": 60,
+    "actualTotalMin": 25,
+    "reopenCount": 0,
+    "cancelReason": null,
+    "version": 5,
+    "createdAt": "2026-10-28T21:52:15.788Z",
+    "updatedAt": "2026-10-28T21:52:20.875Z",
+    "resolvedAt": null,
+    "closedAt": null,
+    "customer": {
+     "id": "bf2752c3-48f2-455e-b876-4d665b06061b",
+     "accountNo": "ACC-1010",
+     "name": "Dilruba Yasmin",
+     "phone": "+8801711000010",
+     "address": "Khilgaon Chowdhurypara",
+     "area": "Khilgaon",
+     "planMbps": 50
+    },
+    "technician": {
+     "id": "0e865d39-1c8c-442c-bfc2-7cf086ac5f88",
+     "name": "Nusrat Jahan",
+     "skills": [
+      "ROUTER",
+      "WIFI"
+     ]
+    }
+   },
+   "reason": "step_completed",
+   "unlocked": []
+  }
+ },
+ "sla.warning": {
+  "seq": 82,
+  "type": "sla.warning",
+  "ts": "2026-10-28T21:52:21.326Z",
+  "room": "staff",
+  "payload": {
+   "ticketId": "af676980-e724-4e4e-97e5-97c4ef8c8450",
+   "ticketNo": "TX-1002",
+   "slaState": "WARNING",
+   "deadline": "2026-10-28T21:52:22.106Z"
+  }
+ },
+ "sla.breached": {
+  "seq": 104,
+  "type": "sla.breached",
+  "ts": "2026-10-28T21:52:22.226Z",
+  "room": "staff",
+  "payload": {
+   "ticketId": "af676980-e724-4e4e-97e5-97c4ef8c8450",
+   "ticketNo": "TX-1002",
+   "slaState": "BREACHED",
+   "deadline": "2026-10-28T21:52:22.106Z"
+  }
+ },
+ "step.unlocked": {
+  "seq": 123,
+  "type": "step.unlocked",
+  "ts": "2026-10-28T21:52:23.380Z",
+  "room": "staff",
+  "payload": {
+   "ticketId": "9ba09af0-8310-4c20-930e-4a8549b6a85d",
+   "steps": [
+    {
+     "id": "7afa1f1f-5b14-43f7-ae85-2091462129d4",
+     "ticketId": "9ba09af0-8310-4c20-930e-4a8549b6a85d",
+     "seq": 1,
+     "title": "Verify account provisioning",
+     "status": "DONE",
+     "estimatedMinutes": 10,
+     "actualMinutes": 9,
+     "requiredSkill": "GENERAL",
+     "assigneeId": "c4711ada-8185-4b35-b839-5ecebb8032d0",
+     "assigneeName": "Sadia Rahman",
+     "startedAt": "2026-10-28T21:52:22.154Z",
+     "completedAt": "2026-10-28T21:52:23.358Z",
+     "dependsOn": [],
+     "version": 3,
+     "elapsedMinutes": 9,
+     "etaMinutes": 0,
+     "overrunLevel": 0,
+     "overrun": false
+    },
+    {
+     "id": "08cadc51-2d78-4dcf-88c1-415848228ba7",
+     "ticketId": "9ba09af0-8310-4c20-930e-4a8549b6a85d",
+     "seq": 2,
+     "title": "Re-provision service profile",
+     "status": "READY",
+     "estimatedMinutes": 15,
+     "actualMinutes": null,
+     "requiredSkill": "NETWORK",
+     "assigneeId": null,
+     "assigneeName": null,
+     "startedAt": null,
+     "completedAt": null,
+     "dependsOn": [
+      "7afa1f1f-5b14-43f7-ae85-2091462129d4"
+     ],
+     "version": 2,
+     "elapsedMinutes": 0,
+     "etaMinutes": 15,
+     "overrunLevel": 0,
+     "overrun": false
+    },
+    {
+     "id": "ef797d82-aa61-4764-9478-6684e8d99794",
+     "ticketId": "9ba09af0-8310-4c20-930e-4a8549b6a85d",
+     "seq": 3,
+     "title": "Test connection",
+     "status": "LOCKED",
+     "estimatedMinutes": 5,
+     "actualMinutes": null,
+     "requiredSkill": "GENERAL",
+     "assigneeId": null,
+     "assigneeName": null,
+     "startedAt": null,
+     "completedAt": null,
+     "dependsOn": [
+      "08cadc51-2d78-4dcf-88c1-415848228ba7"
+     ],
+     "version": 1,
+     "elapsedMinutes": 0,
+     "etaMinutes": 20,
+     "overrunLevel": 0,
+     "overrun": false
+    },
+    {
+     "id": "7739b57b-f7c3-472b-80cf-8a054b9f0cb6",
+     "ticketId": "9ba09af0-8310-4c20-930e-4a8549b6a85d",
+     "seq": 4,
+     "title": "Verify result & update customer",
+     "status": "LOCKED",
+     "estimatedMinutes": 5,
+     "actualMinutes": null,
+     "requiredSkill": "GENERAL",
+     "assigneeId": null,
+     "assigneeName": null,
+     "startedAt": null,
+     "completedAt": null,
+     "dependsOn": [
+      "ef797d82-aa61-4764-9478-6684e8d99794"
+     ],
+     "version": 1,
+     "elapsedMinutes": 0,
+     "etaMinutes": 25,
+     "overrunLevel": 0,
+     "overrun": false
+    }
+   ],
+   "forecast": {
+    "finish": "2026-10-28T21:52:27.128Z",
+    "estimatedTotalMin": 35,
+    "actualTotalMin": 9
+   },
+   "changedStepId": "7afa1f1f-5b14-43f7-ae85-2091462129d4"
+  }
+ },
+ "ticket.status_changed:verification": {
+  "seq": 441,
+  "type": "ticket.status_changed",
+  "ts": "2026-10-28T21:52:34.736Z",
+  "room": "staff",
+  "payload": {
+   "ticket": {
+    "id": "9ba09af0-8310-4c20-930e-4a8549b6a85d",
+    "number": 1003,
+    "ticketNo": "TX-1003",
+    "title": "New connection not working",
+    "description": "Installed yesterday but cannot browse, PPPoE login fails",
+    "category": "NEW_CONNECTION",
+    "categoryName": "New connection",
+    "priority": "CRITICAL",
+    "escalated": false,
+    "status": "RESOLVED",
+    "progress": 95,
+    "diagnosis": "PROVISIONING",
+    "slaState": "ON_TRACK",
+    "slaStartedAt": "2026-10-28T21:52:20.709Z",
+    "slaDeadline": "2026-10-28T21:52:56.709Z",
+    "forecastFinish": null,
+    "estimatedTotalMin": 35,
+    "actualTotalMin": 46,
+    "reopenCount": 0,
+    "cancelReason": null,
+    "version": 7,
+    "createdAt": "2026-10-28T21:52:20.709Z",
+    "updatedAt": "2026-10-28T21:52:34.732Z",
+    "resolvedAt": "2026-10-28T21:52:34.724Z",
+    "closedAt": null,
+    "customer": {
+     "id": "2101446f-05e0-44dd-ad9b-1ccbd5653c5d",
+     "accountNo": "ACC-1002",
+     "name": "Farhana Akter",
+     "phone": "+8801711000002",
+     "address": "Flat 4B, Sector 7, Uttara",
+     "area": "Uttara",
+     "planMbps": 100
+    },
+    "technician": {
+     "id": "c4711ada-8185-4b35-b839-5ecebb8032d0",
+     "name": "Sadia Rahman",
+     "skills": [
+      "FIBER",
+      "NETWORK",
+      "GENERAL"
+     ]
+    }
+   },
+   "from": "VERIFYING",
+   "to": "RESOLVED",
+   "verification": {
+    "passed": true,
+    "measuredMbps": 96.8,
+    "planMbps": 100
+   }
+  }
+ },
+ "ticket.closed": {
+  "seq": 552,
+  "type": "ticket.closed",
+  "ts": "2026-10-28T21:52:39.123Z",
+  "room": "staff",
+  "payload": {
+   "ticket": {
+    "id": "9ba09af0-8310-4c20-930e-4a8549b6a85d",
+    "number": 1003,
+    "ticketNo": "TX-1003",
+    "title": "New connection not working",
+    "description": "Installed yesterday but cannot browse, PPPoE login fails",
+    "category": "NEW_CONNECTION",
+    "categoryName": "New connection",
+    "priority": "CRITICAL",
+    "escalated": false,
+    "status": "CLOSED",
+    "progress": 100,
+    "diagnosis": "PROVISIONING",
+    "slaState": "ON_TRACK",
+    "slaStartedAt": "2026-10-28T21:52:20.709Z",
+    "slaDeadline": "2026-10-28T21:52:56.709Z",
+    "forecastFinish": null,
+    "estimatedTotalMin": 35,
+    "actualTotalMin": 46,
+    "reopenCount": 0,
+    "cancelReason": null,
+    "version": 8,
+    "createdAt": "2026-10-28T21:52:20.709Z",
+    "updatedAt": "2026-10-28T21:52:39.119Z",
+    "resolvedAt": "2026-10-28T21:52:34.724Z",
+    "closedAt": "2026-10-28T21:52:39.112Z",
+    "customer": {
+     "id": "2101446f-05e0-44dd-ad9b-1ccbd5653c5d",
+     "accountNo": "ACC-1002",
+     "name": "Farhana Akter",
+     "phone": "+8801711000002",
+     "address": "Flat 4B, Sector 7, Uttara",
+     "area": "Uttara",
+     "planMbps": 100
+    },
+    "technician": {
+     "id": "c4711ada-8185-4b35-b839-5ecebb8032d0",
+     "name": "Sadia Rahman",
+     "skills": [
+      "FIBER",
+      "NETWORK",
+      "GENERAL"
+     ]
+    }
+   },
+   "source": "operator"
+  }
+ }
+}
