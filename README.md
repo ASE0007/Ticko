@@ -67,11 +67,12 @@ Demo accounts are for local coursework only. Change or remove them before any pu
 - `backend/` — REST API, business logic, database access, job queue, WebSocket server, and tests.
 - `frontend/` — React pages, UI components, API client, state, WebSocket client, and tests.
 - `backend/prisma/` — database schema, migrations, and seed script.
-- `docs/01-system-analysis.md` — problem, scope, users, and requirements.
-- `docs/02-system-design.md` — architecture, ERD, API, WebSocket, and concurrency design.
-- `docs/03-technical-documentation.md` — setup, configuration, routes, events, testing, and troubleshooting.
+- [System Analysis](docs/01-system-analysis.md) — problem, objectives, users, scope, assumptions, and functional/non-functional requirements.
+- [System Design](docs/02-system-design.md) — architecture, component design, ERD, API design, WebSocket flow, concurrency model, and technology choices.
+- [Technical Documentation](docs/03-technical-documentation.md) — setup, environment variables, database, REST API reference, WebSocket events, background jobs, testing, security, and troubleshooting.
+- [Windows Setup Guide](SETUP-WINDOWS.md) — Windows CMD setup and troubleshooting.
 
-The diagrams used by the Markdown documents are stored in `docs/diagrams/`.
+The architecture, component, ERD, workflow, WebSocket, and concurrency diagrams are included as Mermaid diagrams in [docs/02-system-design.md](docs/02-system-design.md). There is no separate `docs/diagrams/` image folder in this repository.
 
 ## Database and environment
 
@@ -79,16 +80,84 @@ Docker Compose starts PostgreSQL and configures the application to connect to th
 
 The root `.env` file is used by Docker Compose. It is local configuration and must not be committed. Keep `.env.example` with placeholder/sample values so another developer can set up their own environment.
 
-## Development and tests
+The main database models are `User`, `Technician`, `Customer`, `Category`, `Ticket`, `TicketAssignment`, `WorkStep`, `StepDependency`, `StatusHistory`, `Job`, `ProbeResult`, and `SlaPolicy`. Schema, migration and seed files are stored under `backend/prisma/`. See the [System Design](docs/02-system-design.md) and [Technical Documentation](docs/03-technical-documentation.md) for schema relationships and database setup steps.
 
-For local development with hot reload, install Node.js 20 or newer and follow [SETUP-WINDOWS.md](SETUP-WINDOWS.md). Backend and frontend tests are located in their respective `tests/` folders. Run the test commands defined by each package's `package.json`.
+## API documentation
 
-## Important limitations
+The REST API base path is `/api`. Requests use JSON unless an export endpoint returns CSV. Authenticated endpoints use `Authorization: Bearer <JWT>`.
 
-- ISP line diagnostics and speed checks use a simulated probe.
-- The event bus and replay buffer are in the backend process; a multi-instance deployment would need shared messaging and replay storage.
-- Free hosting services may sleep or have resource limits. Verify the deployed application and database before sharing a live link.
+| Method | Path | Purpose |
+|---|---|---|
+| `POST` | `/api/auth/login` | Sign in and receive a JWT. |
+| `GET` | `/api/auth/me` | Get the signed-in user's profile. |
+| `POST` | `/api/tickets` | Create a ticket and queue diagnostics. |
+| `GET` | `/api/tickets` | List and filter tickets. |
+| `GET` | `/api/tickets/:id` | Read ticket details. |
+| `POST` | `/api/tickets/:id/assign` | Assign a technician. |
+| `POST` | `/api/tickets/:id/request-verification` | Queue speed verification. |
+| `GET` | `/api/jobs` | View background jobs (manager roles). |
+| `GET` | `/api/reports/summary` | Read report summary (manager roles). |
+| `GET` | `/api/public/track/:token` | Read a customer-safe tracking view. |
+| `GET` | `/healthz` | Backend liveness check. |
+| `GET` | `/readyz` | Backend/database readiness check. |
+
+For the full endpoint inventory, permissions, request validation notes, response/error shapes, and status codes, see [Technical Documentation §8](docs/03-technical-documentation.md#8-rest-api-reference) and `backend/src/routes/index.ts`.
+
+## WebSocket events
+
+The browser connects to `/ws` through the same host as the frontend. With the local Docker Compose setup, the browser uses `ws://localhost:5173/ws`. Staff sockets authenticate with a JWT; customer tracking sockets use the ticket's tracking token.
+
+Main event families include:
+
+- Tickets: `ticket.created`, `ticket.updated`, `ticket.status_changed`, `ticket.assigned`, `ticket.cancelled`, `ticket.closed`, `ticket.reopened`.
+- Work steps and forecasts: `step.updated`, `step.unlocked`, `step.overrun`, `forecast.updated`.
+- Jobs: `job.queued`, `job.started`, `job.progress`, `job.retrying`, `job.completed`, `job.failed`, `job.cancelled`, `job.alert`.
+- SLA and dashboard: `sla.at_risk`, `sla.warning`, `sla.breached`, `technician.updated`, `metrics.updated`, `presence.updated`.
+- Connection control: `system.hello`, `system.resumed`, `system.resync_required`, `system.error`, and `pong`.
+
+The client reconnects and requests replay of missed events. The backend stores the replay buffer in memory only; after a large event gap or backend restart, the client may need to reload current state through REST. See [Technical Documentation §9](docs/03-technical-documentation.md#9-websocket-protocol) for message examples, authentication, rooms, event envelopes, and reconnect behavior.
+
+## Build, tests, and CI
+
+Backend tests require a dedicated PostgreSQL test database named `tixoryops_test`. The test setup recreates that database's `public` schema. **Never point test configuration at a database containing data you need to preserve.**
+
+Backend commands:
+
+```bat
+cd /d "C:\projects\Ticko\backend"
+npm ci
+npx prisma generate
+npm run typecheck
+npm test
+npm run build
+```
+
+Frontend commands:
+
+```bat
+cd /d "C:\projects\Ticko\frontend"
+npm ci
+npm run typecheck
+npm test
+npm run build
+```
+
+The GitHub Actions workflow is [.github/workflows/ci.yml](.github/workflows/ci.yml). It runs backend and frontend type checks, automated tests and builds, then builds the Docker Compose images. Use the actual test output and CI status when reporting results; the presence of test files alone does not prove every test passed.
+
+## Important limitations and security
+
+- ISP line diagnostics and speed checks use a simulated probe; no real router, SNMP, TR-069, or ISP monitoring integration is included.
+- The event bus, WebSocket replay buffer, SLA scheduler, and job dispatcher run inside one backend process. Multiple backend instances would require shared event/replay infrastructure and safe distributed job claiming.
+- The Compose defaults are intended for local coursework. Before any public exposure, use a strong secret, turn demo overrides off, enable rate limiting, restrict CORS origins, replace demo credentials, and do not expose PostgreSQL publicly.
+- Do not commit `.env`, passwords, tokens, real customer details, `node_modules/`, build output, or database files.
+- Cloud hosting is separate from local Docker Compose. Running this project locally does not automatically create a public website.
 
 ## Assignment documents
 
-See the files under `docs/` for System Analysis, System Design, and Technical Documentation. If you prepare a submission ZIP, do not include `.env`, passwords, tokens, `node_modules/`, or generated build output.
+The assignment documentation is organised as follows:
+
+1. [System Analysis](docs/01-system-analysis.md)
+2. [System Design](docs/02-system-design.md)
+3. [Technical Documentation](docs/03-technical-documentation.md)
+
+Do not include `.env`, real secrets, `node_modules/`, `dist/`, coverage reports, database dumps, or generated build output in a source submission.
