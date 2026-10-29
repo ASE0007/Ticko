@@ -1,0 +1,39 @@
+# One free Render web service = nginx (frontend + proxy) + Node backend (REST + WebSocket).
+# Same origin => the frontend code works unchanged (/api and /ws are relative).
+
+# ---------- frontend build ----------
+FROM node:20-alpine AS fe
+WORKDIR /app
+COPY frontend/package.json frontend/package-lock.json ./
+RUN npm ci
+COPY frontend ./
+RUN npm run build
+
+# ---------- backend build ----------
+FROM node:20-bookworm-slim AS be
+WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends openssl ca-certificates && rm -rf /var/lib/apt/lists/*
+COPY backend/package.json backend/package-lock.json ./
+RUN npm ci
+COPY backend/prisma ./prisma
+RUN npx prisma generate
+COPY backend/tsconfig.json backend/tsconfig.build.json ./
+COPY backend/scripts ./scripts
+COPY backend/src ./src
+RUN npm run build
+
+# ---------- runtime ----------
+FROM node:20-bookworm-slim
+WORKDIR /app
+ENV NODE_ENV=production
+RUN apt-get update && apt-get install -y --no-install-recommends nginx openssl ca-certificates \
+    && rm -rf /var/lib/apt/lists/* /etc/nginx/sites-enabled/default /etc/nginx/conf.d/default.conf
+COPY --from=be /app/node_modules ./node_modules
+COPY --from=be /app/dist ./dist
+COPY --from=be /app/prisma ./prisma
+COPY backend/package.json ./
+COPY --from=fe /app/dist /usr/share/nginx/html
+COPY deploy/nginx.conf.template /etc/nginx/ticko.conf.template
+COPY deploy/start.sh /start.sh
+RUN chmod +x /start.sh
+CMD ["/start.sh"]
